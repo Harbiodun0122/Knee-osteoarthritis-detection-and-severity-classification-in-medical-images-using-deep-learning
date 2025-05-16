@@ -17,8 +17,7 @@ from detectron2.utils.visualizer import ColorMode, Visualizer
 from tensorflow.keras.preprocessing.image import img_to_array, load_img
 
 # Load your trained models
-kidney_model = tf.keras.models.load_model(r"C:/Users/Harbiodun/Downloads/Assignment/Project/kidney_best.h5")
-pneumonia_model = tf.keras.models.load_model(r"C:/Users/Harbiodun/Downloads/Assignment/Project/chest_best.h5")
+kidney_model = tf.keras.models.load_model("kidney_best.h5")
 # knee_model = tf.keras.models.load_model(r"C:/Users/Harbiodun/Downloads/Assignment/Project/improved-48-0.84.keras")
 
 
@@ -43,11 +42,8 @@ def main():
 
     with tabs[0]:
         kidney_disease_classification()
-    
-    with tabs[1]:
-        pneumonia_classification()
 
-    # with tabs[2]:
+    # with tabs[1]:
     #     knee_osteoarthritis_classification()
 
 def kidney_disease_classification():
@@ -81,40 +77,6 @@ def kidney_disease_classification():
                     """,
                     unsafe_allow_html=True
                 )
-            except Exception as e:
-                st.error(f"Error in classification: {e}")
-
-def pneumonia_classification():
-    st.header("Pneumonia Classification")
-    pneumonia_image = st.file_uploader("Upload a pneumonia image", type=["jpg", "png", 'jpeg'], key="pneumonia")
-    if pneumonia_image is not None:
-        pneumonia_img = image.load_img(pneumonia_image, target_size=(256, 256))
-        pneumonia_img = image.img_to_array(pneumonia_img)
-        pneumonia_img = np.expand_dims(pneumonia_img, axis=0)
-        pneumonia_img = pneumonia_img / 255.0  
-
-        pneumonia_col1, pneumonia_col2 = st.columns(2)
-        with pneumonia_col1:
-            st.image(pneumonia_img, caption="Uploaded Chest Image", width=500)
-
-        with pneumonia_col2:
-            try:
-                # with st.spinner('Classifying...'):
-                pneumonia_prediction = pneumonia_model.predict(pneumonia_img)
-                pneumonia_class_labels = ['NORMAL', 'PNEUMONIA']
-                predicted_pneumonia_class = pneumonia_class_labels[np.argmax(pneumonia_prediction)]
-                pneumonia_confidence = pneumonia_prediction[0][np.argmax(pneumonia_prediction)]
-                
-                st.markdown(
-                    f"""
-                    <div style="text-align: right;">
-                        <p><strong>Prediction:</strong> {predicted_pneumonia_class}</p>
-                        <p><strong>Confidence:</strong> {round(pneumonia_confidence * 100, 2)}%</p>
-                    </div>
-                    """,
-                    unsafe_allow_html=True
-                )
-                    
             except Exception as e:
                 st.error(f"Error in classification: {e}")
 
